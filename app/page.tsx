@@ -6,7 +6,10 @@ export default function Home() {
       aria-label="background"
       className="bg-[#A07FAC] h-screen w-screen flex justify-center"
     >
-      <div className="h-full flex flex-col items-center justify-end">
+      <div
+        aria-label="atm"
+        className="h-full flex flex-col items-center justify-end"
+      >
         <div className="flex items-center justify-center px-16 py-4 rounded-md bg-[#136CAE] box-shadow-lg relative">
           <Image
             src="/img/atm/atm_sign.png"
@@ -22,7 +25,31 @@ export default function Home() {
             height={175}
           />
         </div>
-        <div className="bg-[#F1F0E7] w-11/12 md:h-2/3 h-4/5"></div>
+        <div className="bg-gray-300 w-11/12 h-2" />
+        <div className="bg-[#F1F0E7] w-11/12 md:h-2/3 h-4/5 relative">
+          <div className="grid grid-cols-[auto_1fr_auto] w-full p-2 gap-2">
+            <Image
+              className="w-full col-start-2 h-6"
+              src="/img/atm/creditcard_sprite.png"
+              alt="credit card sprite"
+              width={150}
+              height={10}
+            />
+            <div className="bg-gray-400 row-start-2 w-14 h-24 self-end" />
+            <div
+              aria-label="screen"
+              className="bg-gray-400 row-start-2 w-full h-44"
+            />
+            <div className="bg-gray-400 row-start-2 w-14 h-24 self-end" />
+          </div>
+          <Image
+            className="w-36 col-start-2 h-auto absolute top-2/5 left-1/12"
+            src="/img/atm/sticker_graf.png"
+            alt="sticker graf"
+            width={150}
+            height={10}
+          />
+        </div>
       </div>
     </div>
   );
