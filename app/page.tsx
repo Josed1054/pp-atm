@@ -38,12 +38,19 @@ export default function Home() {
             <div className="bg-gray-400 row-start-2 w-14 h-24 self-end" />
             <div
               aria-label="screen"
-              className="bg-gray-400 row-start-2 w-full h-44"
+              className="bg-[#7EB4D5] border-4 border-[#E1E1D6] row-start-2 w-full h-44"
             />
             <div className="bg-gray-400 row-start-2 w-14 h-24 self-end" />
+            <Image
+              className="w-10 col-start-2 row-start-3 h-1.5 justify-self-end"
+              src="/img/atm/systems.png"
+              alt="systems"
+              width={150}
+              height={10}
+            />
           </div>
           <Image
-            className="w-36 col-start-2 h-auto absolute top-2/5 left-1/12"
+            className="w-36 col-start-2 h-auto absolute md:top-2/5 top-1/3 left-1/12"
             src="/img/atm/sticker_graf.png"
             alt="sticker graf"
             width={150}
