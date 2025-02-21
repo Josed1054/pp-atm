@@ -1,5 +1,7 @@
 "use client";
 
+import ATMScreen, { LINE_SIDE } from "@/components/atm/screen/Screen";
+
 import ATMButtons from "@/components/atm/Buttons";
 import Image from "next/image";
 
@@ -23,6 +25,39 @@ const LEFT_BUTTONS = [
     label: "4",
     onClick: () => {},
     disabled: false,
+  },
+];
+
+const SCREEN_OPTIONS = [
+  {
+    label: "Withdraw",
+    disabled: false,
+    position: "col-start-1 row-start-5",
+    lineSide: LINE_SIDE.LEFT,
+  },
+  {
+    label: "Deposit",
+    disabled: false,
+    position: "col-start-1 row-start-6",
+    lineSide: LINE_SIDE.LEFT,
+  },
+  {
+    label: "Exit",
+    disabled: false,
+    position: "col-start-2 row-start-4",
+    lineSide: LINE_SIDE.RIGHT,
+  },
+  {
+    label: "Balance",
+    disabled: false,
+    position: "col-start-2 row-start-5",
+    lineSide: LINE_SIDE.RIGHT,
+  },
+  {
+    label: "Re-Enter PIN",
+    disabled: false,
+    position: "col-start-2 row-start-6",
+    lineSide: LINE_SIDE.RIGHT,
   },
 ];
 
@@ -51,8 +86,8 @@ export default function Home() {
             height={175}
           />
         </div>
-        <div className="bg-gray-300 w-11/12 h-2" />
-        <div className="bg-[#F1F0E7] w-11/12 md:h-2/3 h-4/5 relative">
+        <div className="bg-gray-300 w-11/12 max-w-11/12 h-2" />
+        <div className="bg-[#F1F0E7] w-11/12 max-w-11/12 md:h-2/3 h-4/5 relative">
           <div className="grid grid-cols-[auto_1fr_auto] w-full p-2 gap-0 gap-y-1">
             <Image
               className="w-full col-start-2 h-8"
@@ -62,10 +97,7 @@ export default function Home() {
               height={10}
             />
             <ATMButtons direction="left" buttons={LEFT_BUTTONS} />
-            <div
-              aria-label="screen"
-              className="bg-[#7EB4D5] border-4 border-[#E1E1D6] row-start-2 w-full h-54"
-            />
+            <ATMScreen options={SCREEN_OPTIONS} />
             <ATMButtons direction="right" buttons={LEFT_BUTTONS} />
             <Image
               className="w-10 col-start-2 row-start-3 h-1.5 justify-self-end"
