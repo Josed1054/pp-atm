@@ -1,10 +1,10 @@
 "use client";
 
 import { ATMSchema, IATMSchemaType } from "@/lib/schemas/atm";
-import ATMScreen, { LINE_SIDE } from "@/components/atm/screen/Screen";
 import { atmReducer, initialATMData } from "@/reducers/atm";
 
 import ATMButtons from "@/components/atm/Buttons";
+import ATMScreen from "@/components/atm/screen/Screen";
 import Image from "next/image";
 import ViewManager from "@/components/atm/screen/ViewManager";
 import { useForm } from "react-hook-form";
@@ -31,39 +31,6 @@ const LEFT_BUTTONS = [
     label: "4",
     onClick: () => {},
     disabled: false,
-  },
-];
-
-export const SCREEN_OPTIONS = [
-  {
-    label: "Withdraw",
-    disabled: false,
-    position: "col-start-1 row-start-5",
-    lineSide: LINE_SIDE.LEFT,
-  },
-  {
-    label: "Deposit",
-    disabled: false,
-    position: "col-start-1 row-start-6",
-    lineSide: LINE_SIDE.LEFT,
-  },
-  {
-    label: "Exit",
-    disabled: false,
-    position: "col-start-2 row-start-4",
-    lineSide: LINE_SIDE.RIGHT,
-  },
-  {
-    label: "Balance",
-    disabled: false,
-    position: "col-start-2 row-start-5",
-    lineSide: LINE_SIDE.RIGHT,
-  },
-  {
-    label: "Re-Enter PIN",
-    disabled: false,
-    position: "col-start-2 row-start-6",
-    lineSide: LINE_SIDE.RIGHT,
   },
 ];
 
