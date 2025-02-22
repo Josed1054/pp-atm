@@ -36,7 +36,7 @@ enum ATM_ACTIONS {
 }
 
 export const initialATMData: IATMData = {
-  view: "success",
+  view: "enter-pin",
   userAuth: {
     name: "Josed1054",
     cardProvider: null,

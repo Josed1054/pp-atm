@@ -1,5 +1,7 @@
+import { IATMSchemaType } from "@/lib/schemas/atm";
 import { LINE_SIDE } from "./Screen";
 import ScreenButtonText from "./ScreenButtonText";
+import { UseFormRegister } from "react-hook-form";
 import { formatNumber } from "@/lib/utils";
 
 const WITHDRAW_OPTIONS = [
@@ -55,9 +57,13 @@ const WITHDRAW_OPTIONS = [
 
 interface IWithdrawProps {
   balance: number;
+  register: UseFormRegister<IATMSchemaType>;
 }
 
-export default function Withdraw({ balance }: Readonly<IWithdrawProps>) {
+export default function Withdraw({
+  balance,
+  register,
+}: Readonly<IWithdrawProps>) {
   return (
     <>
       <div className="col-span-2 row-span-2 flex flex-col items-center justify-center gap-1 p-4 w-full h-full">

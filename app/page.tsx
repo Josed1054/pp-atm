@@ -1,12 +1,15 @@
 "use client";
 
+import { ATMSchema, IATMSchemaType } from "@/lib/schemas/atm";
 import ATMScreen, { LINE_SIDE } from "@/components/atm/screen/Screen";
 import { atmReducer, initialATMData } from "@/reducers/atm";
 
 import ATMButtons from "@/components/atm/Buttons";
 import Image from "next/image";
 import ViewManager from "@/components/atm/screen/ViewManager";
+import { useForm } from "react-hook-form";
 import { useReducer } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const LEFT_BUTTONS = [
   {
@@ -67,6 +70,12 @@ export const SCREEN_OPTIONS = [
 export default function Home() {
   const [atmData, setATMData] = useReducer(atmReducer, initialATMData);
 
+  const atmForm = useForm<IATMSchemaType>({
+    resolver: zodResolver(ATMSchema),
+  });
+
+  const pin = atmForm.watch("pin");
+
   return (
     <div
       aria-label="background"
@@ -103,7 +112,7 @@ export default function Home() {
             />
             <ATMButtons direction="left" buttons={LEFT_BUTTONS} />
             <ATMScreen>
-              <ViewManager atmData={atmData} />
+              <ViewManager atmData={atmData} form={atmForm} />
             </ATMScreen>
             <ATMButtons direction="right" buttons={LEFT_BUTTONS} />
             <Image

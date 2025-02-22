@@ -1,6 +1,8 @@
+import { IATMSchemaType } from "@/lib/schemas/atm";
 import { LINE_SIDE } from "./Screen";
 import ReactCodeInput from "react-verification-code-input";
 import ScreenButtonText from "./ScreenButtonText";
+import { UseFormReturn } from "react-hook-form";
 
 const ENTER_PIN_OPTIONS = [
   {
@@ -13,10 +15,12 @@ const ENTER_PIN_OPTIONS = [
 
 interface IEnterPinScreenProps {
   error: string | null;
+  form: UseFormReturn<IATMSchemaType>;
 }
 
 export default function EnterPinScreen({
   error,
+  form,
 }: Readonly<IEnterPinScreenProps>) {
   return (
     <>
@@ -28,7 +32,8 @@ export default function EnterPinScreen({
           className="!w-auto [&_input]:bg-white [&_input]:!text-black [&_input]:!text-xs [&_input]:!font-mono"
           fieldWidth={20}
           fieldHeight={16}
-          onComplete={() => console.log("done")}
+          onChange={(value) => form.setValue("pin", Number(value))}
+          values={form.getValues("pin")?.toString().split("")}
         />
         {error && <p className="text-red-700 text-sm">{error}</p>}
       </div>

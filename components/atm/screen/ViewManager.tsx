@@ -2,18 +2,24 @@ import Balance from "./Balance";
 import Deposit from "./Deposit";
 import EnterPinScreen from "./EnterPinScreen";
 import { IATMData } from "@/reducers/atm";
+import { IATMSchemaType } from "@/lib/schemas/atm";
 import NotFound from "./404";
 import { SCREEN_OPTIONS } from "@/app/page";
 import SelectionMenu from "./SelectionMenu";
 import Success from "./Success";
+import { UseFormReturn } from "react-hook-form";
 import Welcome from "./Welcome";
 import Withdraw from "./Withdraw";
 
 interface IViewManagerProps {
   atmData: IATMData;
+  form: UseFormReturn<IATMSchemaType>;
 }
 
-export default function ViewManager({ atmData }: Readonly<IViewManagerProps>) {
+export default function ViewManager({
+  atmData,
+  form,
+}: Readonly<IViewManagerProps>) {
   if (atmData.userAuth.isAuthenticated && atmData.userAuth.name) {
     if (atmData.view === "selection-menu") {
       return (
@@ -22,11 +28,11 @@ export default function ViewManager({ atmData }: Readonly<IViewManagerProps>) {
     }
 
     if (atmData.view === "withdraw") {
-      return <Withdraw balance={atmData.balance} />;
+      return <Withdraw balance={atmData.balance} register={form.register} />;
     }
 
     if (atmData.view === "deposit") {
-      return <Deposit balance={atmData.balance} />;
+      return <Deposit balance={atmData.balance} register={form.register} />;
     }
 
     if (atmData.view === "view-balance") {
@@ -43,7 +49,7 @@ export default function ViewManager({ atmData }: Readonly<IViewManagerProps>) {
   }
 
   if (atmData.view === "enter-pin") {
-    return <EnterPinScreen error={"Test error"} />;
+    return <EnterPinScreen error={"Test error"} form={form} />;
   }
 
   return <NotFound />;
