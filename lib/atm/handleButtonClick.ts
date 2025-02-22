@@ -4,11 +4,12 @@ import { IATMSchemaType } from "../schemas/atm";
 import { UseFormReturn } from "react-hook-form";
 import { UseMutationResult } from "@tanstack/react-query";
 
-const TRANSACTION_AMOUNTS = [100, 200, 300, 400, 500, 1000];
+export const TRANSACTION_AMOUNTS = [100, 200, 300, 400, 500, 1000];
 
 export function handleButtonClick(
   buttonId: number,
   view: ATM_VIEWS,
+  balance: number,
   setATMData: (action: IATMAction) => void,
   logOut: () => void,
   registerWithdrawMutation: UseMutationResult<number, Error, number>,
@@ -71,6 +72,12 @@ export function handleButtonClick(
   }
 
   if (view === ATM_VIEWS.WITHDRAW) {
+    const withdrawAmount = atmForm.getValues("withdrawAmount");
+
+    if (buttonId === 7 && withdrawAmount > 0 && withdrawAmount < balance) {
+      return registerWithdrawMutation.mutate(withdrawAmount);
+    }
+
     if (buttonId === 8) {
       return setATMData({
         type: ATM_ACTIONS.SET_VIEW,
@@ -78,13 +85,11 @@ export function handleButtonClick(
       });
     }
 
-    if (buttonId === 7) {
-      return registerWithdrawMutation.mutate(
-        atmForm.getValues("withdrawAmount")
-      );
+    if (TRANSACTION_AMOUNTS[buttonId - 1] <= balance) {
+      return registerWithdrawMutation.mutate(TRANSACTION_AMOUNTS[buttonId - 1]);
     }
 
-    return registerWithdrawMutation.mutate(TRANSACTION_AMOUNTS[buttonId - 1]);
+    return;
   }
 
   if (view === ATM_VIEWS.DEPOSIT) {

@@ -1,8 +1,11 @@
 import { IATMSchemaType } from "@/lib/schemas/atm";
+import { Input } from "@/components/ui/input";
 import { LINE_SIDE } from "./Screen";
+import { Label } from "@/components/ui/label";
 import ScreenButtonText from "./ScreenButtonText";
 import { UseFormRegister } from "react-hook-form";
 import { formatNumber } from "@/lib/utils";
+import { registerNumericField } from "./Deposit";
 
 const WITHDRAW_OPTIONS = [
   {
@@ -58,17 +61,31 @@ const WITHDRAW_OPTIONS = [
 interface IWithdrawProps {
   balance: number;
   register: UseFormRegister<IATMSchemaType>;
+  customAmount: number;
 }
 
 export default function Withdraw({
   balance,
   register,
+  customAmount,
 }: Readonly<IWithdrawProps>) {
   return (
     <>
       <div className="col-span-2 row-span-2 flex flex-col items-center justify-center gap-1 p-4 w-full h-full">
         <p className="text-white text-sm">Current Balance</p>
         <p className="text-white text-xs">${formatNumber(balance)}</p>
+        <div className="flex items-center justify-center gap-2">
+          <Label className="text-white text-xs">Amount</Label>
+          <Input
+            className="w-2/5 h-5 !text-xs bg-white p-1 rounded-none border-0 shadow-none focus-visible:border-0 focus-visible:ring-0 focus-visible:shadow-none"
+            {...registerNumericField("withdrawAmount", register)}
+          />
+        </div>
+        {customAmount > balance && (
+          <p className="text-red-500 text-[0.5rem]">
+            You cannot withdraw more than your balance
+          </p>
+        )}
       </div>
       <ScreenButtonText options={WITHDRAW_OPTIONS} />
     </>

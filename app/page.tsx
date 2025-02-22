@@ -1,5 +1,6 @@
 "use client";
 
+import ATMButtons, { IButton } from "@/components/atm/Buttons";
 import { ATMSchema, IATMSchemaType } from "@/lib/schemas/atm";
 import {
   ATM_ACTIONS,
@@ -7,34 +8,40 @@ import {
   atmReducer,
   initialATMData,
 } from "@/reducers/atm";
+import {
+  TRANSACTION_AMOUNTS,
+  handleButtonClick,
+} from "@/lib/atm/handleButtonClick";
 import { simulateTransaction, validatePin } from "@/services/atm";
-import { useEffect, useReducer } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-import ATMButtons from "@/components/atm/Buttons";
 import ATMScreen from "@/components/atm/screen/Screen";
 import Image from "next/image";
 import ViewManager from "@/components/atm/screen/ViewManager";
-import { handleButtonClick } from "@/lib/atm/handleButtonClick";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const LEFT_BUTTONS = [
+const LEFT_BUTTONS: IButton[] = [
   {
     id: 1,
     label: "1",
+    disabled: false,
   },
   {
     id: 3,
     label: "2",
+    disabled: false,
   },
   {
     id: 5,
     label: "3",
+    disabled: false,
   },
   {
     id: 7,
     label: "4",
+    disabled: false,
   },
 ];
 
@@ -42,18 +49,22 @@ const RIGHT_BUTTONS = [
   {
     id: 2,
     label: "5",
+    disabled: false,
   },
   {
     id: 4,
     label: "6",
+    disabled: false,
   },
   {
     id: 6,
     label: "7",
+    disabled: false,
   },
   {
     id: 8,
     label: "8",
+    disabled: false,
   },
 ];
 
@@ -62,9 +73,14 @@ export default function Home() {
 
   const atmForm = useForm<IATMSchemaType>({
     resolver: zodResolver(ATMSchema),
+    defaultValues: {
+      withdrawAmount: 0,
+      depositAmount: 0,
+    },
   });
 
   const pin = atmForm.watch("pin");
+  const withdrawAmount = atmForm.watch("withdrawAmount");
 
   const {
     data: userAuth,
@@ -81,6 +97,7 @@ export default function Home() {
     onSuccess: (amount) => {
       setATMData({ type: ATM_ACTIONS.WITHDRAW, payload: amount });
       setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: ATM_VIEWS.SUCCESS });
+      resetForm();
     },
   });
 
@@ -89,6 +106,7 @@ export default function Home() {
     onSuccess: (amount) => {
       setATMData({ type: ATM_ACTIONS.DEPOSIT, payload: amount });
       setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: ATM_VIEWS.SUCCESS });
+      resetForm();
     },
   });
 
@@ -99,9 +117,50 @@ export default function Home() {
         type: ATM_ACTIONS.SET_VIEW,
         payload: ATM_VIEWS.SELECTION_MENU,
       });
-      atmForm.reset();
+      resetForm();
     }
   }, [userAuth]);
+
+  console.log(withdrawAmount);
+
+  const disabledLeftButtons = useMemo(() => {
+    return LEFT_BUTTONS.map((button) => {
+      if (atmData.view === ATM_VIEWS.WITHDRAW) {
+        if (
+          button.id === 7 &&
+          (atmData.balance < withdrawAmount || withdrawAmount < 1)
+        ) {
+          return { ...button, disabled: true };
+        }
+
+        if (atmData.balance < TRANSACTION_AMOUNTS[button.id - 1]) {
+          return { ...button, disabled: true };
+        }
+
+        return button;
+      }
+
+      return button;
+    });
+  }, [atmData.view, atmData.balance, withdrawAmount]);
+
+  const disabledRightButtons = useMemo(() => {
+    return RIGHT_BUTTONS.map((button) => {
+      if (atmData.view === ATM_VIEWS.WITHDRAW) {
+        if (atmData.balance < TRANSACTION_AMOUNTS[button.id - 1]) {
+          return { ...button, disabled: true };
+        }
+
+        return button;
+      }
+
+      return button;
+    });
+  }, [atmData.view, atmData.balance]);
+
+  function resetForm() {
+    atmForm.reset();
+  }
 
   function logOut() {
     setATMData({
@@ -113,6 +172,11 @@ export default function Home() {
       },
     });
   }
+
+  const isLoading =
+    isUserAuthLoading ||
+    registerWithdrawMutation.isPending ||
+    registerDepositMutation.isPending;
 
   return (
     <div
@@ -150,11 +214,12 @@ export default function Home() {
             />
             <ATMButtons
               direction="left"
-              buttons={LEFT_BUTTONS}
+              buttons={disabledLeftButtons}
               onButtonClick={(id) =>
                 handleButtonClick(
                   id,
                   atmData.view,
+                  atmData.balance,
                   setATMData,
                   logOut,
                   registerWithdrawMutation,
@@ -162,6 +227,7 @@ export default function Home() {
                   atmForm
                 )
               }
+              isLoading={isLoading}
             />
             <ATMScreen>
               <ViewManager
@@ -173,11 +239,12 @@ export default function Home() {
             </ATMScreen>
             <ATMButtons
               direction="right"
-              buttons={RIGHT_BUTTONS}
+              buttons={disabledRightButtons}
               onButtonClick={(id) =>
                 handleButtonClick(
                   id,
                   atmData.view,
+                  atmData.balance,
                   setATMData,
                   logOut,
                   registerWithdrawMutation,
@@ -185,10 +252,19 @@ export default function Home() {
                   atmForm
                 )
               }
+              isLoading={isLoading}
+            />
+            <Image
+              className="w-10 col-start-2 row-start-3 h-1.5 justify-self-end"
+              src="/img/atm/systems.png"
+              alt="systems"
+              width={150}
+              height={10}
             />
           </div>
+
           <Image
-            className="w-36 col-start-2 h-auto absolute md:top-5/10 top-1/3 left-1/12"
+            className="w-36 col-start-2 h-auto absolute md:top-9/16 top-1/3 left-1/12"
             src="/img/atm/sticker_graf.png"
             alt="sticker graf"
             width={150}

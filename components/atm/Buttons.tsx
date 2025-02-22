@@ -3,20 +3,24 @@
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
-interface IATMButtonsProps {
+export interface IButton {
+  id: number;
+  label: string;
+  disabled?: boolean;
+}
+
+export interface IATMButtonsProps {
   direction: "left" | "right";
-  buttons: {
-    id: number;
-    label: string;
-    disabled?: boolean;
-  }[];
+  buttons: IButton[];
   onButtonClick: (id: number) => void;
+  isLoading?: boolean;
 }
 
 export default function ATMButtons({
   direction,
   buttons,
   onButtonClick,
+  isLoading,
 }: Readonly<IATMButtonsProps>) {
   return (
     <div
@@ -33,7 +37,7 @@ export default function ATMButtons({
           <Button
             className="w-3/4 h-6 bg-[#C1C1C1] cursor-pointer rounded-sm border-y-2 border-b-[#9B9B9B] border-t-[#D9D9D4] hover:bg-slate-300"
             onClick={() => onButtonClick(button.id)}
-            disabled={button.disabled}
+            disabled={button.disabled || isLoading}
           />
           {direction === "left" && <div className="w-1/4 h-1 bg-[#C1C1C1]" />}
         </div>
