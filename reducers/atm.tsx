@@ -27,7 +27,7 @@ export type IATMAction =
   | { type: ATM_ACTIONS.DEPOSIT; payload: number }
   | { type: ATM_ACTIONS.WITHDRAW; payload: number };
 
-enum ATM_ACTIONS {
+export enum ATM_ACTIONS {
   SET_USER_AUTH = "SET_USER_AUTH",
   SET_BALANCE = "SET_BALANCE",
   DEPOSIT = "DEPOSIT",
@@ -36,11 +36,11 @@ enum ATM_ACTIONS {
 }
 
 export const initialATMData: IATMData = {
-  view: "enter-pin",
+  view: "welcome",
   userAuth: {
-    name: "Josed1054",
+    name: null,
     cardProvider: null,
-    isAuthenticated: true,
+    isAuthenticated: false,
   },
   balance: 1000,
   transactions: [],

@@ -14,12 +14,14 @@ const ENTER_PIN_OPTIONS = [
 ];
 
 interface IEnterPinScreenProps {
-  error: string | null;
+  isUserAuthLoading: boolean;
+  isUserAuthError: boolean;
   form: UseFormReturn<IATMSchemaType>;
 }
 
 export default function EnterPinScreen({
-  error,
+  isUserAuthLoading,
+  isUserAuthError,
   form,
 }: Readonly<IEnterPinScreenProps>) {
   return (
@@ -35,7 +37,8 @@ export default function EnterPinScreen({
           onChange={(value) => form.setValue("pin", Number(value))}
           values={form.getValues("pin")?.toString().split("")}
         />
-        {error && <p className="text-red-700 text-sm">{error}</p>}
+        {isUserAuthLoading && <p className="text-white text-sm">Loading...</p>}
+        {isUserAuthError && <p className="text-red-700 text-sm">Invalid PIN</p>}
       </div>
       <ScreenButtonText options={ENTER_PIN_OPTIONS} />
     </>

@@ -6,7 +6,7 @@ const WELCOME_OPTIONS: IScreenButtonTextOption[] = [
   {
     label: "Enter PIN",
     disabled: false,
-    position: "col-start-1 row-start-6",
+    position: "col-start-2 row-start-6",
     lineSide: LINE_SIDE.RIGHT,
   },
 ];
