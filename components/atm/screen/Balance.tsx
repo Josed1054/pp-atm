@@ -1,6 +1,7 @@
+import DisplayBalance from "./DisplayBalance";
+import { IBalance } from "@/reducers/atm";
 import { LINE_SIDE } from "./Screen";
 import ScreenButtonText from "./ScreenButtonText";
-import { formatNumber } from "@/lib/utils";
 
 const BALANCE_OPTIONS = [
   {
@@ -24,15 +25,15 @@ const BALANCE_OPTIONS = [
 ];
 
 interface IBalanceProps {
-  balance: number;
+  balanceData: IBalance;
 }
 
-export default function Balance({ balance }: Readonly<IBalanceProps>) {
+export default function Balance({ balanceData }: Readonly<IBalanceProps>) {
   return (
     <>
       <div className="col-span-2 row-span-2 flex flex-col items-center justify-center gap-1 p-4 w-full h-full">
         <p className="text-white text-sm">Current Balance</p>
-        <p className="text-white text-xs">${formatNumber(balance)}</p>
+        <DisplayBalance balanceData={balanceData} />
       </div>
       <ScreenButtonText options={BALANCE_OPTIONS} />
     </>

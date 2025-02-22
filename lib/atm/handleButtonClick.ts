@@ -9,7 +9,7 @@ export const TRANSACTION_AMOUNTS = [100, 200, 300, 400, 500, 1000];
 export function handleButtonClick(
   buttonId: number,
   view: ATM_VIEWS,
-  balance: number,
+  balance: number | null,
   setATMData: (action: IATMAction) => void,
   logOut: () => void,
   registerWithdrawMutation: UseMutationResult<number, Error, number>,
@@ -72,9 +72,11 @@ export function handleButtonClick(
   }
 
   if (view === ATM_VIEWS.WITHDRAW) {
+    if (balance === null) return;
+
     const withdrawAmount = atmForm.getValues("withdrawAmount");
 
-    if (buttonId === 7 && withdrawAmount > 0 && withdrawAmount < balance) {
+    if (buttonId === 7 && withdrawAmount > 0 && withdrawAmount <= balance) {
       return registerWithdrawMutation.mutate(withdrawAmount);
     }
 

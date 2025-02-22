@@ -31,7 +31,7 @@ export default function ViewManager({
     if (atmData.view === "withdraw") {
       return (
         <Withdraw
-          balance={atmData.balance}
+          balanceData={atmData.balance}
           register={form.register}
           customAmount={form.watch("withdrawAmount")}
         />
@@ -39,11 +39,11 @@ export default function ViewManager({
     }
 
     if (atmData.view === "deposit") {
-      return <Deposit balance={atmData.balance} register={form.register} />;
+      return <Deposit balanceData={atmData.balance} register={form.register} />;
     }
 
     if (atmData.view === "view-balance") {
-      return <Balance balance={atmData.balance} />;
+      return <Balance balanceData={atmData.balance} />;
     }
 
     if (atmData.view === "success") {

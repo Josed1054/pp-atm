@@ -12,7 +12,7 @@ import {
   TRANSACTION_AMOUNTS,
   handleButtonClick,
 } from "@/lib/atm/handleButtonClick";
-import { simulateTransaction, validatePin } from "@/services/atm";
+import { getBalance, simulateTransaction, validatePin } from "@/services/atm";
 import { useEffect, useMemo, useReducer } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -92,6 +92,16 @@ export default function Home() {
     enabled: !!pin && pin.toString().length === 4,
   });
 
+  const {
+    data: balanceData,
+    isLoading: isBalanceLoading,
+    isError: isBalanceError,
+  } = useQuery({
+    queryKey: ["balance", atmData.userAuth.id],
+    queryFn: () => getBalance(atmData.userAuth.id ?? ""),
+    enabled: !!atmData.userAuth.id,
+  });
+
   const registerWithdrawMutation = useMutation({
     mutationFn: (amount: number) => simulateTransaction(amount),
     onSuccess: (amount) => {
@@ -121,17 +131,51 @@ export default function Home() {
     }
   }, [userAuth]);
 
+  useEffect(() => {
+    if (balanceData) {
+      handleSetBalance(balanceData);
+    }
+
+    if (isBalanceLoading) {
+      setATMData({
+        type: ATM_ACTIONS.SET_BALANCE,
+        payload: {
+          data: null,
+          isLoading: true,
+          isError: false,
+        },
+      });
+    }
+
+    if (isBalanceError) {
+      setATMData({
+        type: ATM_ACTIONS.SET_BALANCE,
+        payload: {
+          data: null,
+          isLoading: false,
+          isError: true,
+        },
+      });
+    }
+  }, [balanceData, isBalanceLoading, isBalanceError]);
+
   const disabledLeftButtons = useMemo(() => {
     return LEFT_BUTTONS.map((button) => {
       if (atmData.view === ATM_VIEWS.WITHDRAW) {
+        if (!atmData.balance.data) {
+          return { ...button, disabled: true };
+        }
+
         if (
           button.id === 7 &&
-          (atmData.balance < withdrawAmount || withdrawAmount < 1)
+          (atmData.balance.data < withdrawAmount ||
+            withdrawAmount < 1 ||
+            !withdrawAmount)
         ) {
           return { ...button, disabled: true };
         }
 
-        if (atmData.balance < TRANSACTION_AMOUNTS[button.id - 1]) {
+        if (atmData.balance.data < TRANSACTION_AMOUNTS[button.id - 1]) {
           return { ...button, disabled: true };
         }
 
@@ -145,7 +189,15 @@ export default function Home() {
   const disabledRightButtons = useMemo(() => {
     return RIGHT_BUTTONS.map((button) => {
       if (atmData.view === ATM_VIEWS.WITHDRAW) {
-        if (atmData.balance < TRANSACTION_AMOUNTS[button.id - 1]) {
+        if (!atmData.balance.data) {
+          if (button.id !== 8) {
+            return { ...button, disabled: true };
+          }
+
+          return button;
+        }
+
+        if (atmData.balance.data < TRANSACTION_AMOUNTS[button.id - 1]) {
           return { ...button, disabled: true };
         }
 
@@ -164,6 +216,7 @@ export default function Home() {
     setATMData({
       type: ATM_ACTIONS.SET_USER_AUTH,
       payload: {
+        id: null,
         name: null,
         cardProvider: null,
         isAuthenticated: false,
@@ -171,10 +224,22 @@ export default function Home() {
     });
   }
 
+  function handleSetBalance(balance: number) {
+    setATMData({
+      type: ATM_ACTIONS.SET_BALANCE,
+      payload: {
+        data: balance,
+        isLoading: false,
+        isError: false,
+      },
+    });
+  }
+
   const isLoading =
     isUserAuthLoading ||
     registerWithdrawMutation.isPending ||
-    registerDepositMutation.isPending;
+    registerDepositMutation.isPending ||
+    isBalanceLoading;
 
   return (
     <div
@@ -217,7 +282,7 @@ export default function Home() {
                 handleButtonClick(
                   id,
                   atmData.view,
-                  atmData.balance,
+                  atmData.balance.data,
                   setATMData,
                   logOut,
                   registerWithdrawMutation,
@@ -242,7 +307,7 @@ export default function Home() {
                 handleButtonClick(
                   id,
                   atmData.view,
-                  atmData.balance,
+                  atmData.balance.data,
                   setATMData,
                   logOut,
                   registerWithdrawMutation,
