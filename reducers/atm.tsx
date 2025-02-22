@@ -1,12 +1,5 @@
 export interface IATMData {
-  view:
-    | "welcome"
-    | "enter-pin"
-    | "selection-menu"
-    | "view-balance"
-    | "withdraw"
-    | "deposit"
-    | "success";
+  view: ATM_VIEWS;
   userAuth: {
     name: string | null;
     cardProvider: string | null;
@@ -35,8 +28,18 @@ export enum ATM_ACTIONS {
   SET_VIEW = "SET_VIEW",
 }
 
+export enum ATM_VIEWS {
+  WELCOME = "welcome",
+  ENTER_PIN = "enter-pin",
+  SELECTION_MENU = "selection-menu",
+  VIEW_BALANCE = "view-balance",
+  WITHDRAW = "withdraw",
+  DEPOSIT = "deposit",
+  SUCCESS = "success",
+}
+
 export const initialATMData: IATMData = {
-  view: "welcome",
+  view: ATM_VIEWS.WELCOME,
   userAuth: {
     name: null,
     cardProvider: null,

@@ -1,7 +1,12 @@
 "use client";
 
 import { ATMSchema, IATMSchemaType } from "@/lib/schemas/atm";
-import { ATM_ACTIONS, atmReducer, initialATMData } from "@/reducers/atm";
+import {
+  ATM_ACTIONS,
+  ATM_VIEWS,
+  atmReducer,
+  initialATMData,
+} from "@/reducers/atm";
 import { simulateTransaction, validatePin } from "@/services/atm";
 import { useEffect, useReducer } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -10,6 +15,7 @@ import ATMButtons from "@/components/atm/Buttons";
 import ATMScreen from "@/components/atm/screen/Screen";
 import Image from "next/image";
 import ViewManager from "@/components/atm/screen/ViewManager";
+import { handleButtonClick } from "@/lib/atm/handleButtonClick";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -74,7 +80,7 @@ export default function Home() {
     mutationFn: (amount: number) => simulateTransaction(amount),
     onSuccess: (amount) => {
       setATMData({ type: ATM_ACTIONS.WITHDRAW, payload: amount });
-      setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: "success" });
+      setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: ATM_VIEWS.SUCCESS });
     },
   });
 
@@ -82,14 +88,17 @@ export default function Home() {
     mutationFn: (amount: number) => simulateTransaction(amount),
     onSuccess: (amount) => {
       setATMData({ type: ATM_ACTIONS.DEPOSIT, payload: amount });
-      setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: "success" });
+      setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: ATM_VIEWS.SUCCESS });
     },
   });
 
   useEffect(() => {
     if (userAuth) {
       setATMData({ type: ATM_ACTIONS.SET_USER_AUTH, payload: userAuth });
-      setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: "selection-menu" });
+      setATMData({
+        type: ATM_ACTIONS.SET_VIEW,
+        payload: ATM_VIEWS.SELECTION_MENU,
+      });
       atmForm.reset();
     }
   }, [userAuth]);
@@ -103,95 +112,6 @@ export default function Home() {
         isAuthenticated: false,
       },
     });
-  }
-
-  function handleButtonClick(buttonId: number) {
-    if (atmData.view === "welcome" && buttonId === 8) {
-      return setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: "enter-pin" });
-    }
-
-    if (atmData.view === "enter-pin" && buttonId === 8) {
-      return setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: "welcome" });
-    }
-
-    if (atmData.view === "selection-menu") {
-      if (buttonId === 4) {
-        logOut();
-
-        return setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: "welcome" });
-      }
-
-      if (buttonId === 5) {
-        return setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: "withdraw" });
-      }
-
-      if (buttonId === 6) {
-        return setATMData({
-          type: ATM_ACTIONS.SET_VIEW,
-          payload: "view-balance",
-        });
-      }
-
-      if (buttonId === 7) {
-        return setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: "deposit" });
-      }
-
-      if (buttonId === 8) {
-        logOut();
-
-        return setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: "enter-pin" });
-      }
-    }
-
-    if (atmData.view === "withdraw") {
-      if (buttonId === 8) {
-        return setATMData({
-          type: ATM_ACTIONS.SET_VIEW,
-          payload: "selection-menu",
-        });
-      }
-    }
-
-    if (atmData.view === "deposit") {
-      if (buttonId === 8) {
-        return setATMData({
-          type: ATM_ACTIONS.SET_VIEW,
-          payload: "selection-menu",
-        });
-      }
-    }
-
-    if (atmData.view === "view-balance") {
-      if (buttonId === 6) {
-        return setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: "withdraw" });
-      }
-
-      if (buttonId === 7) {
-        return setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: "deposit" });
-      }
-
-      if (buttonId === 8) {
-        return setATMData({
-          type: ATM_ACTIONS.SET_VIEW,
-          payload: "selection-menu",
-        });
-      }
-    }
-
-    if (atmData.view === "success") {
-      if (buttonId === 8) {
-        return setATMData({
-          type: ATM_ACTIONS.SET_VIEW,
-          payload: "selection-menu",
-        });
-      }
-    }
-
-    if (buttonId === 8) {
-      logOut();
-
-      return setATMData({ type: ATM_ACTIONS.SET_VIEW, payload: "welcome" });
-    }
   }
 
   return (
@@ -231,7 +151,17 @@ export default function Home() {
             <ATMButtons
               direction="left"
               buttons={LEFT_BUTTONS}
-              onButtonClick={handleButtonClick}
+              onButtonClick={(id) =>
+                handleButtonClick(
+                  id,
+                  atmData.view,
+                  setATMData,
+                  logOut,
+                  registerWithdrawMutation,
+                  registerDepositMutation,
+                  atmForm
+                )
+              }
             />
             <ATMScreen>
               <ViewManager
@@ -244,14 +174,17 @@ export default function Home() {
             <ATMButtons
               direction="right"
               buttons={RIGHT_BUTTONS}
-              onButtonClick={handleButtonClick}
-            />
-            <Image
-              className="w-10 col-start-2 row-start-3 h-1.5 justify-self-end"
-              src="/img/atm/systems.png"
-              alt="systems"
-              width={150}
-              height={10}
+              onButtonClick={(id) =>
+                handleButtonClick(
+                  id,
+                  atmData.view,
+                  setATMData,
+                  logOut,
+                  registerWithdrawMutation,
+                  registerDepositMutation,
+                  atmForm
+                )
+              }
             />
           </div>
           <Image
