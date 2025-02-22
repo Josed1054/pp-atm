@@ -1,9 +1,12 @@
 "use client";
 
 import ATMScreen, { LINE_SIDE } from "@/components/atm/screen/Screen";
+import { atmReducer, initialATMData } from "@/reducers/atm";
 
 import ATMButtons from "@/components/atm/Buttons";
 import Image from "next/image";
+import ViewManager from "@/components/atm/screen/ViewManager";
+import { useReducer } from "react";
 
 const LEFT_BUTTONS = [
   {
@@ -28,7 +31,7 @@ const LEFT_BUTTONS = [
   },
 ];
 
-const SCREEN_OPTIONS = [
+export const SCREEN_OPTIONS = [
   {
     label: "Withdraw",
     disabled: false,
@@ -62,6 +65,8 @@ const SCREEN_OPTIONS = [
 ];
 
 export default function Home() {
+  const [atmData, setATMData] = useReducer(atmReducer, initialATMData);
+
   return (
     <div
       aria-label="background"
@@ -97,7 +102,9 @@ export default function Home() {
               height={10}
             />
             <ATMButtons direction="left" buttons={LEFT_BUTTONS} />
-            <ATMScreen options={SCREEN_OPTIONS} />
+            <ATMScreen>
+              <ViewManager atmData={atmData} />
+            </ATMScreen>
             <ATMButtons direction="right" buttons={LEFT_BUTTONS} />
             <Image
               className="w-10 col-start-2 row-start-3 h-1.5 justify-self-end"
