@@ -121,8 +121,6 @@ export default function Home() {
     }
   }, [userAuth]);
 
-  console.log(withdrawAmount);
-
   const disabledLeftButtons = useMemo(() => {
     return LEFT_BUTTONS.map((button) => {
       if (atmData.view === ATM_VIEWS.WITHDRAW) {

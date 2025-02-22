@@ -114,6 +114,7 @@
   --color-sidebar: var(--sidebar);
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-caret-blink: caret-blink 1.25s ease-out infinite;
 
   @keyframes accordion-down {
     from {
@@ -130,6 +131,15 @@
     }
     to {
       height: 0;
+    }
+  }
+
+  @keyframes caret-blink {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
     }
   }
 }
