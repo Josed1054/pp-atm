@@ -17,6 +17,7 @@ import { useEffect, useMemo, useReducer } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import ATMScreen from "@/components/atm/screen/Screen";
+import CardType from "@/components/atm/screen/CardType";
 import Image from "next/image";
 import ViewManager from "@/components/atm/screen/ViewManager";
 import { useForm } from "react-hook-form";
@@ -267,13 +268,7 @@ export default function Home() {
         <div className="bg-gray-300 w-11/12 max-w-11/12 h-2" />
         <div className="bg-[#F1F0E7] w-11/12 max-w-11/12 md:h-2/3 h-4/5 relative">
           <div className="grid grid-cols-[auto_1fr_auto] w-full p-2 gap-0 gap-y-1">
-            <Image
-              className="w-full col-start-2 h-8"
-              src="/img/atm/creditcard_sprite.png"
-              alt="credit card sprite"
-              width={150}
-              height={10}
-            />
+            <CardType cardProvider={atmData.userAuth.cardProvider} />
             <ATMButtons
               direction="left"
               buttons={disabledLeftButtons}

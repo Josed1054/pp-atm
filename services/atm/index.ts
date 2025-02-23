@@ -21,7 +21,7 @@ export const validatePin = async (pin: number): Promise<IUserAuth> => {
         resolve({
           id: "1054",
           name: "Josed1054",
-          cardProvider: "Mastercard",
+          cardProvider: "Mastercard-Credit",
           isAuthenticated: true,
         });
       }
