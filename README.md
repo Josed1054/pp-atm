@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ATM Simulator
 
-## Getting Started
+A modern ATM simulator built with Next.js, React Query, and TypeScript. This application simulates real ATM functionality with a sleek user interface and robust state management.
 
-First, run the development server:
+## 🌟 Features
+
+- PIN Authentication System
+- Balance Inquiries
+- Deposit & Withdrawal Operations
+- Transaction History
+- Real-time Balance Updates
+- Responsive Design
+- Error Handling
+- Loading States
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 15
+- **Language**: TypeScript
+- **State Management**: React Query, React Reducer
+- **Form Handling**: React Hook Form, Zod
+- **Styling**: Tailwind CSS
+- **Components**: Shadcn/ui
+
+## 🚀 Getting Started
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/atm-simulator.git
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) with your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📱 Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Test PINs
 
-## Learn More
+- 1234 (Visa User - Balance: \$1,000)
+- 1054 (Mastercard User - Balance: \$2,000)
+- 5001 (Star Card User - Balance: \$3,000)
 
-To learn more about Next.js, take a look at the following resources:
+### Available Operations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- View Balance
+- Withdraw Money (Preset amounts or custom amount)
+- Deposit Money (Preset amounts or custom amount)
+- Transaction History
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🏗️ Project Structure
 
-## Deploy on Vercel
+```
+├── app/                  # Next.js app directory
+├── components/
+│   ├── atm/            # ATM-specific components
+│   │   ├── screen/     # Screen components
+│   │   └── buttons/    # Button components
+│   └── ui/             # Shared UI components
+├── lib/                 # Utilities and schemas
+├── reducers/           # State management
+└── services/           # API simulation
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔒 State Management
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The application uses a combination of:
+
+- React Query for server state
+- React Reducer for application state
+- React Hook Form for form state
+
+## 🎨 Design System
+
+The UI is built with a custom design system that simulates a real ATM interface, including:
+
+- Physical button simulation
+- Screen display
+- Card reader visualization
+- Transaction feedback
