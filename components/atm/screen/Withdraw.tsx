@@ -1,12 +1,9 @@
+import AmountInput from "./AmountInput";
 import DisplayBalance from "./DisplayBalance";
-import { IATMSchemaType } from "@/lib/schemas/atm";
 import { IBalance } from "@/reducers/atm";
-import { Input } from "@/components/ui/input";
 import { LINE_SIDE } from "./Screen";
 import { Label } from "@/components/ui/label";
 import ScreenButtonText from "./ScreenButtonText";
-import { UseFormRegister } from "react-hook-form";
-import { registerNumericField } from "./Deposit";
 
 const WITHDRAW_OPTIONS = [
   {
@@ -61,14 +58,14 @@ const WITHDRAW_OPTIONS = [
 
 interface IWithdrawProps {
   balanceData: IBalance;
-  register: UseFormRegister<IATMSchemaType>;
-  customAmount: number;
+  value: number;
+  setWithdrawAmount: (value: number) => void;
 }
 
 export default function Withdraw({
   balanceData,
-  register,
-  customAmount,
+  value,
+  setWithdrawAmount,
 }: Readonly<IWithdrawProps>) {
   return (
     <>
@@ -79,12 +76,12 @@ export default function Withdraw({
 
         <div className="flex items-center justify-center gap-2">
           <Label className="text-white text-xs">Withdraw Amount</Label>
-          <Input
-            className="w-2/5 h-5 !text-xs bg-white p-1 rounded-none border-0 shadow-none focus-visible:border-0 focus-visible:ring-0 focus-visible:shadow-none"
-            {...registerNumericField("withdrawAmount", register)}
+          <AmountInput
+            value={value}
+            onChange={(value) => setWithdrawAmount(value)}
           />
         </div>
-        {customAmount > (balanceData.data ?? 0) && (
+        {value > (balanceData.data ?? 0) && (
           <p className="text-red-500 text-[0.5rem]">
             You cannot withdraw more than your balance
           </p>

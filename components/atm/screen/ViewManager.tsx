@@ -32,14 +32,20 @@ export default function ViewManager({
       return (
         <Withdraw
           balanceData={atmData.balance}
-          register={form.register}
-          customAmount={form.watch("withdrawAmount")}
+          value={form.watch("withdrawAmount")}
+          setWithdrawAmount={(value) => form.setValue("withdrawAmount", value)}
         />
       );
     }
 
     if (atmData.view === "deposit") {
-      return <Deposit balanceData={atmData.balance} register={form.register} />;
+      return (
+        <Deposit
+          balanceData={atmData.balance}
+          value={form.watch("depositAmount")}
+          setDepositAmount={(value) => form.setValue("depositAmount", value)}
+        />
+      );
     }
 
     if (atmData.view === "view-balance") {

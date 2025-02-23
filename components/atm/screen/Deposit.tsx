@@ -1,7 +1,7 @@
+import AmountInput from "./AmountInput";
 import DisplayBalance from "./DisplayBalance";
 import { IATMSchemaType } from "@/lib/schemas/atm";
 import { IBalance } from "@/reducers/atm";
-import { Input } from "@/components/ui/input";
 import { LINE_SIDE } from "./Screen";
 import { Label } from "@/components/ui/label";
 import ScreenButtonText from "./ScreenButtonText";
@@ -73,12 +73,14 @@ export const registerNumericField = (
 
 interface IDepositProps {
   balanceData: IBalance;
-  register: UseFormRegister<IATMSchemaType>;
+  value: number;
+  setDepositAmount: (value: number) => void;
 }
 
 export default function Deposit({
   balanceData,
-  register,
+  value,
+  setDepositAmount,
 }: Readonly<IDepositProps>) {
   return (
     <>
@@ -87,9 +89,9 @@ export default function Deposit({
         <DisplayBalance balanceData={balanceData} />
         <div className="flex items-center justify-center gap-2">
           <Label className="text-white text-xs">Deposit Amount</Label>
-          <Input
-            className="w-1/4 h-5 !text-xs bg-white p-1 rounded-none border-0 shadow-none focus-visible:border-0 focus-visible:ring-0 focus-visible:shadow-none"
-            {...registerNumericField("depositAmount", register)}
+          <AmountInput
+            value={value}
+            onChange={(value) => setDepositAmount(value)}
           />
         </div>
       </div>

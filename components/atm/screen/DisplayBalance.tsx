@@ -8,8 +8,6 @@ interface IDisplayBalanceProps {
 export default function DisplayBalance({
   balanceData,
 }: Readonly<IDisplayBalanceProps>) {
-  console.log("balanceData", balanceData);
-
   if (balanceData.isLoading) {
     return <p className="text-white text-xs">$--.--</p>;
   }

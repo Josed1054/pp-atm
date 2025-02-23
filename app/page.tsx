@@ -238,8 +238,7 @@ export default function Home() {
   const isLoading =
     isUserAuthLoading ||
     registerWithdrawMutation.isPending ||
-    registerDepositMutation.isPending ||
-    isBalanceLoading;
+    registerDepositMutation.isPending;
 
   return (
     <div
